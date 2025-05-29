@@ -16,10 +16,10 @@ sudo apt-get install apache2
 sudo apt-get install php
 ```
 
-Copy the teletext recovery switcher code to the Apache2 document root:
+Clone the teletext recovery switcher code to the Apache2 document root:
 ```
 cd /var/www/html
-git clone https://github.com/JamieNemeth/teletext-recovery-switcher.git
+git clone https://github.com/JamieNemeth/teletext-recovery-switcher.git .
 ```
 
 Open the sudoers file:
