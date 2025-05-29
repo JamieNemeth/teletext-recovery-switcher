@@ -22,4 +22,5 @@
 	}
 	
 	exec('sudo /home/' . $data["username"] . '/raspi-teletext/./tvctl off');
+	exec('sudo rm /etc/cron.d/teletext-service-switcher || true');
 ?>

@@ -28,6 +28,22 @@
 	
 	$installedServicesFolderUri = "/home/" . $data["username"] . "/.teletext-services";
 	
+	if ($_POST["serviceType"] == "installed")
+	{		
+		if (is_dir($installedServicesFolderUri . "/" . $data["runningService"] . "/.git"))
+		{
+			exec(' echo "*/5 * * * * ' . $data["username"] . ' git -C ' . $installedServicesFolderUri . '/' . $data["runningService"] . ' pull" | sudo tee /etc/cron.d/teletext-service-switcher');
+		}
+		else if (is_dir($installedServicesFolderUri . "/" . $data["runningService"] . "/.svn"))
+		{
+			exec(' echo "*/5 * * * * ' . $data["username"] . ' svn update ' . $installedServicesFolderUri . '/' . $data["runningService"] . '" | sudo tee /etc/cron.d/teletext-service-switcher');
+		}
+	}
+	else
+	{
+		exec('sudo rm /etc/cron.d/teletext-service-switcher || true');
+	}
+	
 	exec('sudo /home/' . $data["username"] . '/raspi-teletext/./tvctl on');
 	exec('/home/' . $data["username"] . '/vbit2/vbit2 --dir "' . ($_POST["serviceType"] == "installed" ? $installedServicesFolderUri : $data["localServicesFolder"]) . '/' . $data["runningService"] . '" | /home/' . $data["username"] . '/raspi-teletext/teletext -');
 ?>
