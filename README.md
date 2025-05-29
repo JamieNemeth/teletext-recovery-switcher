@@ -39,7 +39,6 @@ to change the group ownership of the folder to www-data, and allow www-data to r
 Then enter:
 ```
 sudo usermod -a -G www-data <your username>
-
 ```
 to add yourself to the www-data group.
 
