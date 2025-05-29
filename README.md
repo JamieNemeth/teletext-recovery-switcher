@@ -15,15 +15,19 @@ vbit-config
 #### Install Apache2 and PHP
 In the terminal, enter:
 ```
-sudo apt-get install apache2
-sudo apt-get install php
+sudo apt-get install apache2 php
 ```
 
 #### Clone the teletext service switcher code to the Apache2 document root
 In the terminal, enter:
 ```
 cd /var/www/html
-git clone https://github.com/JamieNemeth/teletext-service-switcher.git .
+sudo git init
+sudo git remote add origin https://github.com/JamieNemeth/teletext-service-switcher.git
+sudo git fetch origin
+sudo git checkout master -f
+sudo git branch --set-upstream-to origin/master
+sudo git pull
 ```
 
 #### Enable the www-data user to run shell commands (from PHP)
