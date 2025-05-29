@@ -28,17 +28,21 @@ sudo rm -rf /var/www/html
 In the terminal, enter:
 ```
 sudo chgrp -R www-data /var/www
-sudo usermod -a -G www-data <your username>
 sudo chmod -R 2775 /var/www
 ```
-to change the group ownership of the folder to www-data, ensure that all new files/folders created within it have at least www-data as the group, and allow www-data to read/write/execute the PHP scripts. Then, add yourself to the www-data group.
+to change the group ownership of the folder to www-data, and allow www-data to read/write/execute the PHP scripts.
 
-#### Change to newgrp
-In the terminal, enter:
+Then enter:
+```
+sudo usermod -a -G www-data <your username>
+```
+to add yourself to the www-data group.
+
+Then enter:
 ```
 newgrp www-data
 ```
-(this just allows you to continue with the following steps, without logging out and back in again.)
+(this just allows you to continue with the following steps, without having to log out and back in again.)
 
 #### Clone the teletext service switcher code to the Apache2 document root
 In the terminal, enter:
