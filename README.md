@@ -44,7 +44,7 @@ to add yourself to the www-data group.
 
 Then enter:
 ```
-sudo setfacl -d -m group:www-data:rwx /var/www
+sudo setfacl -R -d -m group:www-data:rwX /var/www
 
 ```
 to ensure new files and folders inherit the permissions.
