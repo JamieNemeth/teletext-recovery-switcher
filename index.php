@@ -53,6 +53,15 @@
 				
 				window.location.reload();
 			}
+			
+			function onStopOutputClick() {
+				$.ajax({
+					method: "POST",
+					url: "stop_output.php"
+				});
+				
+				window.location.reload();
+			}
 		</script>
 	</head>
 	<body class="text-white p-5">
@@ -96,7 +105,7 @@
 							
 							$availableRecoveryBasenameUri = basename($availableRecoveryUri);
 							$runServiceButtonString = (array_key_exists("runningRecovery", $data) && $availableRecoveryBasenameUri == $data["runningRecovery"])
-								? '<i class="bi bi-play-fill"></i> Running'
+								? '<i class="bi bi-play-fill"></i> Running <button type="button" class="btn btn-danger" style="margin-left: 18px;" onclick="onStopOutputClick();"><i class="bi bi-stop-fill"></i> Stop output</button>'
 								: '<button type="button" class="btn btn-primary" onclick="onRecoverySwitchClick(\'' . urlencode($availableRecoveryBasenameUri) . '\');"><i class="bi bi-play-fill"></i> Run service</button>';
 							
 							echo <<<STR
