@@ -58,6 +58,7 @@ git clone https://github.com/JamieNemeth/teletext-service-switcher.git /var/www/
 to remove the original document root, and replace it with the teletext switcher code.
 
 #### Set permissions (again, for the new files from the Git clone)
+In the terminal, enter:
 ```
 sudo chmod -R 2775 /var/www
 
@@ -94,6 +95,7 @@ sudo usermod -a -G video www-data
 ```
 
 #### Reboot your Raspberry Pi to allow the above setting to be applied
+In the terminal, enter:
 ```
 sudo reboot now
 
