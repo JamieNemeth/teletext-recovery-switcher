@@ -7,6 +7,7 @@ It's also assumed that the Raspberry Pi you're using for teletext, whilst it may
 In the terminal, enter:
 ```
 vbit-config
+
 ```
 - Stop VBIT2 if it's already running
 - Go to options, and disable 'automatically update selected service' and 'run VBIT2 automatically at boot'
@@ -16,12 +17,14 @@ vbit-config
 In the terminal, enter:
 ```
 sudo apt-get install apache2 php
+
 ```
 
 #### Remove the original web document root
 In the terminal, enter:
 ```
 sudo rm -rf /var/www/html
+
 ```
 
 #### Set permissions on the web root
@@ -29,18 +32,21 @@ In the terminal, enter:
 ```
 sudo chgrp -R www-data /var/www
 sudo chmod -R 2775 /var/www
+
 ```
 to change the group ownership of the folder to www-data, and allow www-data to read/write/execute the PHP scripts.
 
 Then enter:
 ```
 sudo usermod -a -G www-data <your username>
+
 ```
 to add yourself to the www-data group.
 
 Then enter:
 ```
 newgrp www-data
+
 ```
 (this just allows you to continue with the following steps, without having to log out and back in again.)
 
@@ -48,12 +54,14 @@ newgrp www-data
 In the terminal, enter:
 ```
 git clone https://github.com/JamieNemeth/teletext-service-switcher.git /var/www/html
+
 ```
 to remove the original document root, and replace it with the teletext switcher code.
 
 #### Set permissions (again, for the new files from the Git clone)
 ```
 sudo chmod -R 2775 /var/www
+
 ```
 
 #### Enable the www-data user to run shell commands (from PHP)
@@ -61,6 +69,7 @@ In the terminal, enter:
 ```
 sudo su
 visudo /etc/sudoers
+
 ```
 to open the sudoers file.
 
@@ -75,12 +84,14 @@ www-data ALL=(ALL) NOPASSWD:ALL
 In the terminal, enter:
 ```
 exit
+
 ```
 
 #### Add the www-data user to the video group so that it can control teletext generation
 In the terminal, enter:
 ```
 sudo usermod -a -G video www-data
+
 ```
 
 - Reboot your Raspberry Pi to allow the above setting to be applied
