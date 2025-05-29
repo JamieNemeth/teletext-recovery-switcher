@@ -68,5 +68,5 @@ Navigate to your Raspberry Pi's IP address in the web browser. Enter the usernam
 
 Once the correct username and root recoveries folder have been saved, you should see a list of available recoveries. Click any 'run service' button to switch the output of VBIT2 to that service.
 
-![image](https://github.com/user-attachments/assets/7584f36b-9969-405b-bb0d-729a34e0b8e6)
+![image](https://github.com/user-attachments/assets/b8216c66-1008-4335-9594-cfc15935d127)
 
