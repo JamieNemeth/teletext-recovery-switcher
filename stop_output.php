@@ -1,5 +1,5 @@
 <?php
-	$_POST["runningRecovery"] = "";
+	$_POST["runningService"] = "";
 	include "save_data.php";
 	
 	exec("pidof vbit2", $vbit2Pids);

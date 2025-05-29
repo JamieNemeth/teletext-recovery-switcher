@@ -29,95 +29,211 @@
 			p {
 				margin-bottom: 0.2rem;
 			}
+			
+			.nav-link .bi, .btn .bi {
+				margin-right: 4px;
+			}
+			
+			.nav-link {
+				color: rgb(181, 0, 178);
+				background-color: rgb(26, 0, 25) !important;
+				
+				border: transparent !important;
+				border-width: 0 1px 1px;
+			}
+			
+			.nav-link:hover {
+				color: white;
+				background-color: rgb(41, 0, 40) !important;
+				
+				border: transparent !important;
+				border-width: 0 1px 1px;
+			}
+			
+			.nav-link.active {
+				color: white !important;
+				background-color: rgb(64, 0, 63) !important;
+				font-weight: bold;
+				
+				border: 1px solid rgb(64, 0, 63) !important;
+				border-width: 0 1px 1px;
+			}
+			
+			.nav-tabs {
+				border: transparent !important;
+				border-width: 0 1px 1px;
+			}
+			
+			.tab-content {
+				padding: 1rem;
+				border: 1px solid rgb(64, 0, 63);
+				border-width: 0 1px 1px;
+				background-image: linear-gradient(rgb(64, 0, 63), rgb(26, 0, 25));
+				margin-bottom: 12px;
+			}
 		</style>
 		
 		<script>
 			function onSaveDataClick() {
 				var username = $("input#username").val();
-				var recoveriesFolder = $("input#recoveriesFolder").val();
+				var localServicesFolder = $("input#localServicesFolder").val();
 				
 				$.ajax({
 					method: "POST",
 					url: "save_data.php",
-					data: { username: username, recoveriesFolder: recoveriesFolder },
+					data: { username: username, localServicesFolder: localServicesFolder },
 					success: function() { window.location.reload(); }
 				});
 			}
 		
-			function onRecoverySwitchClick(runningRecovery) {
+			function onServiceSwitchClick(buttonElement, serviceType, runningService) {
+				buttonElement.outerHTML = '<button type="button" class="btn btn-primary" disabled><i class="bi bi-play-fill"></i> Starting service...</button>';
+				
 				$.ajax({
 					method: "POST",
-					url: "switch_recovery.php",
-					data: { runningRecovery: decodeURIComponent(runningRecovery) }
+					url: "switch_service.php",
+					data: { serviceType: serviceType, runningService: decodeURIComponent(runningService) }
 				});
 				
-				window.location.reload();
+				setTimeout(function() { window.location.reload(); }, 2000);
 			}
 			
-			function onStopOutputClick() {
+			function onStopOutputClick(buttonElement) {
+				buttonElement.outerHTML = '<button type="button" class="btn btn-danger" style="margin-left: 18px;" disabled><i class="bi bi-stop-fill"></i> Stopping output...</button>';
+				
 				$.ajax({
 					method: "POST",
-					url: "stop_output.php"
+					url: "stop_output.php",
+					success: function() { window.location.reload(); }
 				});
-				
-				window.location.reload();
 			}
+			
+			$(function() {
+				if (sessionStorage.hasOwnProperty("currentTab")) {
+					$("#" + sessionStorage.getItem('currentTab')).tab("show");
+				}
+				
+				window.onbeforeunload = function () {
+					sessionStorage.setItem("currentTab", $(".nav-link.active").attr("id"));
+				}
+			});
 		</script>
 	</head>
 	<body class="text-white p-5">
-		<div class="container-sm">
-			<h1>Teletext recovery switcher</h1>
+		<div class="container">
+			<h1>Teletext service switcher</h1>
+			<ul class="nav nav-tabs" id="containerTabsNav" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="container-installed-services-tab-nav" data-bs-toggle="tab" data-bs-target="#container-installed-services-tab-content" type="button" role="tab" aria-controls="container-installed-services-tab-content" aria-selected="">Installed services</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="container-local-services-tab-nav" data-bs-toggle="tab" data-bs-target="#container-local-services-tab-content" type="button" role="tab" aria-controls="container-local-services-tab-content" aria-selected="">Local services</button>
+				</li>
+				<li class="nav-item ms-auto" role="presentation">
+					<button class="nav-link" id="container-settings-tab-nav" data-bs-toggle="tab" data-bs-target="#container-settings-tab-content" type="button" role="tab" aria-controls="container-settings-tab-content" aria-selected=""><i class="bi bi-gear"></i> Settings</button>
+				</li>
+			</ul>
 			
-			<div class="row p-2 align-items-end">
-				<div class="col-4">
-					<div class="form-group">
-						<label for="username">Username</label>
-						<input class="form-control" id="username" type="text" placeholder="pi" value="<?php if (array_key_exists("username", $data)) echo $data["username"]; ?>">
+			<div class="tab-content" id="containerTabsContent">
+			
+				<div class="tab-pane fade show active" id="container-installed-services-tab-content" role="tabpanel" aria-labelledby="container-installed-services-tab-nav">
+					<div id="installed-services-page-container" class="container">
+						<div class="row header-row p-2">
+							<div class="col-8 align-self-center"><b>Service name</b></div>
+							<div class="col-4"><b>Switch to service</b></div>
+						</div>
+						
+						<?php
+							$installedServicesFolderUri = array_key_exists("username", $data) ? "/home/" . $data["username"] . "/.teletext-services" : null;
+						
+							if ($installedServicesFolderUri && is_dir($installedServicesFolderUri))
+							{
+								$availableServicesUris = glob($installedServicesFolderUri . "/*", GLOB_ONLYDIR);
+								
+								foreach ($availableServicesUris as $availableServiceUri)
+								{
+									$ttiFiles = glob($availableServiceUri . "/*.tti");
+									
+									if (count($ttiFiles) > 0)
+									{
+										$availableServiceBasenameUri = basename($availableServiceUri);
+										$runServiceButtonString = (array_key_exists("runningService", $data) && $availableServiceBasenameUri == $data["runningService"])
+											? '<i class="bi bi-play-fill"></i> Running <button type="button" class="btn btn-danger" style="margin-left: 18px;" onclick="onStopOutputClick(this);"><i class="bi bi-stop-fill"></i> Stop output</button>'
+											: '<button type="button" class="btn btn-primary" onclick="onServiceSwitchClick(this, \'installed\', \'' . urlencode($availableServiceBasenameUri) . '\');"><i class="bi bi-play-fill"></i> Start service</button>';
+										
+										echo <<<STR
+												<div class="row row-bordered p-2 align-items-center">
+													<div class="col-8">{$availableServiceBasenameUri}</div>
+													<div class="col-4">{$runServiceButtonString}</div>
+												</div>
+											STR;
+									}
+								}
+							}
+						?>
 					</div>
 				</div>
-				<div class="col-4">
-					<div class="form-group">
-						<label for="recoveriesFolder">Recoveries folder</label>
-						<input class="form-control" id="recoveriesFolder" type="text" placeholder="/" value="<?php if (array_key_exists("recoveriesFolder", $data)) echo $data["recoveriesFolder"]; ?>"></input>
+				
+				<div class="tab-pane fade" id="container-local-services-tab-content" role="tabpanel" aria-labelledby="container-local-services-tab-nav">
+					<div id="local-services-page-container" class="container">
+						<div class="row header-row p-2">
+							<div class="col-8 align-self-center"><b>Service name</b></div>
+							<div class="col-4"><b>Switch to service</b></div>
+						</div>
+						
+						<?php
+							if (array_key_exists("localServicesFolder", $data))
+							{
+								$availableLocalServiceUris = glob($data["localServicesFolder"] . "/*", GLOB_ONLYDIR);
+								
+								foreach ($availableLocalServiceUris as $availableLocalServiceUri)
+								{
+									$ttiFiles = glob($availableLocalServiceUri . "/*.tti");
+									
+									if (count($ttiFiles) > 0)
+									{
+										
+										$availableLocalServiceBasenameUri = basename($availableLocalServiceUri);
+										$runServiceButtonString = (array_key_exists("runningService", $data) && $availableLocalServiceBasenameUri == $data["runningService"])
+											? '<i class="bi bi-play-fill"></i> Running <button type="button" class="btn btn-danger" style="margin-left: 18px;" onclick="onStopOutputClick(this);"><i class="bi bi-stop-fill"></i> Stop output</button>'
+											: '<button type="button" class="btn btn-primary" onclick="onServiceSwitchClick(this, \'local\', \'' . urlencode($availableLocalServiceBasenameUri) . '\');"><i class="bi bi-play-fill"></i> Start service</button>';
+										
+										echo <<<STR
+												<div class="row row-bordered p-2 align-items-center">
+													<div class="col-8">{$availableLocalServiceBasenameUri}</div>
+													<div class="col-4">{$runServiceButtonString}</div>
+												</div>
+											STR;
+									}
+								}
+							}
+						?>
 					</div>
 				</div>
-				<div class="col-2">
-					<button type="button" class="btn btn-primary" onclick="onSaveDataClick();"><i class="bi bi-floppy"></i> Save</button>
+				
+				<div class="tab-pane fade" id="container-settings-tab-content" role="tabpanel" aria-labelledby="container-settings-tab-nav">
+					<div id="settings-page-container" class="container">
+						<div class="row p-2 align-items-end">
+							<div class="col-4">
+								<div class="form-group">
+									<label for="username">Username</label>
+									<input class="form-control" id="username" type="text" placeholder="pi" value="<?php if (array_key_exists("username", $data)) echo $data["username"]; ?>">
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="form-group">
+									<label for="localServicesFolder">Local services root folder</label>
+									<input class="form-control" id="localServicesFolder" type="text" placeholder="/" value="<?php if (array_key_exists("localServicesFolder", $data)) echo $data["localServicesFolder"]; ?>"></input>
+								</div>
+							</div>
+							<div class="col-2">
+								<button type="button" class="btn btn-primary" onclick="onSaveDataClick();"><i class="bi bi-floppy"></i> Save</button>
+							</div>
+						</div>
+					</div>
 				</div>
+				
 			</div>
-						
-			<div class="row header-row p-2">
-				<div class="col-8 align-self-center"><b>Recovery name</b></div>
-				<div class="col-4"><b>Switch to service</b></div>
-			</div>
-			
-			<?php
-				if (array_key_exists("recoveriesFolder", $data))
-				{
-					$availableRecoveryUris = glob($data["recoveriesFolder"] . "/*", GLOB_ONLYDIR);
-					
-					foreach ($availableRecoveryUris as $availableRecoveryUri)
-					{
-						$ttiFiles = glob($availableRecoveryUri . "/*.tti");
-						
-						if (count($ttiFiles) > 0)
-						{
-							
-							$availableRecoveryBasenameUri = basename($availableRecoveryUri);
-							$runServiceButtonString = (array_key_exists("runningRecovery", $data) && $availableRecoveryBasenameUri == $data["runningRecovery"])
-								? '<i class="bi bi-play-fill"></i> Running <button type="button" class="btn btn-danger" style="margin-left: 18px;" onclick="onStopOutputClick();"><i class="bi bi-stop-fill"></i> Stop output</button>'
-								: '<button type="button" class="btn btn-primary" onclick="onRecoverySwitchClick(\'' . urlencode($availableRecoveryBasenameUri) . '\');"><i class="bi bi-play-fill"></i> Run service</button>';
-							
-							echo <<<STR
-									<div class="row row-bordered p-2 align-items-center">
-										<div class="col-8">{$availableRecoveryBasenameUri}</div>
-										<div class="col-4">{$runServiceButtonString}</div>
-									</div>
-								STR;
-						}
-					}
-				}
-			?>
 		</div>
 	</body>
 </html>
