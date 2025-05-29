@@ -93,7 +93,11 @@ sudo usermod -a -G video www-data
 
 ```
 
-- Reboot your Raspberry Pi to allow the above setting to be applied
+#### Reboot your Raspberry Pi to allow the above setting to be applied
+```
+sudo reboot now
+
+```
 
 #### Add username and folder settings to the service switcher
 
