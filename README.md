@@ -13,10 +13,10 @@ vbit-config
 - Go to options, and disable 'automatically update selected service' and 'run VBIT2 automatically at boot'
 
 
-#### Install Apache2 and PHP
+#### Install Apache2, PHP, and ACL
 In the terminal, enter:
 ```
-sudo apt-get install apache2 php -y
+sudo apt-get install apache2 php acl -y
 
 ```
 
@@ -44,6 +44,12 @@ to add yourself to the www-data group.
 
 Then enter:
 ```
+sudo setfacl -d -m group:www-data:rwx /var/www
+```
+to ensure new files and folders inherit the permissions.
+
+Then enter:
+```
 newgrp www-data
 
 ```
@@ -56,13 +62,6 @@ git clone https://github.com/JamieNemeth/teletext-service-switcher.git /var/www/
 
 ```
 to remove the original document root, and replace it with the teletext switcher code.
-
-#### Set permissions (again, for the new files from the Git clone)
-In the terminal, enter:
-```
-sudo chmod -R 2775 /var/www
-
-```
 
 #### Enable the www-data user to run shell commands (from PHP)
 In the terminal, enter:
