@@ -18,13 +18,39 @@ In the terminal, enter:
 sudo apt-get install apache2 php
 ```
 
-#### Clone the teletext service switcher code to the Apache2 document root
+#### Remove the original web document root
 In the terminal, enter:
 ```
 sudo rm -rf /var/www/html
-sudo git clone https://github.com/JamieNemeth/teletext-service-switcher.git /var/www/html
+```
+
+#### Set permissions on the web root
+In the terminal, enter:
+```
+sudo chgrp -R www-data /var/www
+sudo usermod -a -G www-data <your username>
+sudo chmod -R 2775 /var/www
+```
+to change the group ownership of the folder to www-data, ensure that all new files/folders created within it have at least www-data as the group, and allow www-data to read/write/execute the PHP scripts. Then, add yourself to the www-data group.
+
+#### Change to newgrp
+In the terminal, enter:
+```
+newgrp www-data
+```
+(this just allows you to continue with the following steps, without logging out and back in again.)
+
+#### Clone the teletext service switcher code to the Apache2 document root
+In the terminal, enter:
+```
+git clone https://github.com/JamieNemeth/teletext-service-switcher.git /var/www/html
 ```
 to remove the original document root, and replace it with the teletext switcher code.
+
+#### Set permissions (again, for the new files from the Git clone)
+```
+sudo chmod -R 2775 /var/www
+```
 
 #### Enable the www-data user to run shell commands (from PHP)
 In the terminal, enter:
