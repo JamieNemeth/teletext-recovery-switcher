@@ -72,7 +72,7 @@ visudo /etc/sudoers
 ```
 to open the sudoers file.
 
-Append the following line to the sudoers file you opened above:
+Append the following line to the end of the sudoers file you opened above:
 ```
 www-data ALL=(ALL) NOPASSWD:ALL
 ```
