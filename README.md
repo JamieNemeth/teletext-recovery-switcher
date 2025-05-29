@@ -19,11 +19,11 @@ sudo apt-get install apache2
 sudo apt-get install php
 ```
 
-#### Clone the teletext recovery switcher code to the Apache2 document root
+#### Clone the teletext service switcher code to the Apache2 document root
 In the terminal, enter:
 ```
 cd /var/www/html
-git clone https://github.com/JamieNemeth/teletext-recovery-switcher.git .
+git clone https://github.com/JamieNemeth/teletext-service-switcher.git .
 ```
 
 #### Enable the www-data user to run shell commands (from PHP)
@@ -57,16 +57,23 @@ sudo usermod -a -G video www-data
 
 #### Add username and folder settings to the service switcher
 
-Navigate to your Raspberry Pi's IP address in the web browser. Enter the username that you use to log in to the Pi and/or run the teletext software, and the root folder where your teletext recoveries (in TTI format) are stored. Click the 'save' button to store these values (a 'data.json' file will be created in /var/www/html).
+Navigate to your Raspberry Pi's IP address in the web browser. Click on the 'settings' tab, and enter the username that you use to log in to the Pi and/or run the teletext software, and the root folder where your local teletext files (in TTI format) are stored. Click the 'save' button to store these values (a 'data.json' file will be created in /var/www/html).
 
-**Each recovery should be in its own subfolder beneath the root folder,** i.e. the structure should be:
+**Each set of local teletext files should be in its own subfolder beneath the root folder,** i.e. the structure should be:
 ```
 - <root folder>
-    └ <recovery name>
+    └ <local service name>
         └ TTI files go here
 ```
 
-Once the correct username and root recoveries folder have been saved, you should see a list of available recoveries. Click any 'run service' button to switch the output of VBIT2 to that service.
+Once the correct username and root folder have been saved, you should see a list of available installed and local services in their respective tabs. Click any 'run service' button (in either tab) to switch the output of VBIT2 to that service. You do not have to click on 'stop output' first.
 
-![image](https://github.com/user-attachments/assets/b8216c66-1008-4335-9594-cfc15935d127)
+![image](https://github.com/user-attachments/assets/85be8817-c260-4503-8ec5-e93cac49e4d9)
+
+![image](https://github.com/user-attachments/assets/6f4aba1d-3f57-4dab-ae3c-6ce27367fd14)
+
+![image](https://github.com/user-attachments/assets/6be0a7d9-d350-4759-82ae-e0812885548f)
+
+
+
 
