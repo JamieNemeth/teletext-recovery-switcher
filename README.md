@@ -16,7 +16,7 @@ vbit-config
 #### Install Apache2 and PHP
 In the terminal, enter:
 ```
-sudo apt-get install apache2 php
+sudo apt-get install apache2 php -y
 
 ```
 
