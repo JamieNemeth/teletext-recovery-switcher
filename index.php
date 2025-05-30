@@ -1,5 +1,7 @@
 <?php
 	$data = file_exists("data.json") ? json_decode(file_get_contents("data.json"), true) : array();
+	
+	exec("ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'", $hostIP);
 ?>
 <!DOCTYPE html>
 <html>
@@ -121,7 +123,7 @@
 	</head>
 	<body class="text-white p-5">
 		<div class="container">
-			<h1>Teletext service switcher<span style="font-size: 22pt; color: #A0A0A0;"> @ <?php echo gethostname(); ?> (<?php echo gethostbyname(gethostname()); ?>)</span></h1>
+			<h1>Teletext service switcher<span style="font-size: 22pt; color: #A0A0A0;"> @ <?php echo gethostname(); ?> (<?php echo $hostIP[0]; ?>)</span></h1>
 			<ul class="nav nav-tabs" id="containerTabsNav" role="tablist">
 				<li class="nav-item" role="presentation">
 					<button class="nav-link active" id="container-installed-services-tab-nav" data-bs-toggle="tab" data-bs-target="#container-installed-services-tab-content" type="button" role="tab" aria-controls="container-installed-services-tab-content" aria-selected="">Installed services</button>
