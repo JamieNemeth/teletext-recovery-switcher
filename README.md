@@ -30,8 +30,8 @@ sudo rm -rf /var/www/html
 #### Set permissions on the web root
 In the terminal, enter:
 ```
-sudo chgrp -R www-data /var/www
-sudo chmod -R 2775 /var/www
+sudo chgrp www-data /var/www
+sudo chmod 2775 /var/www
 
 ```
 to change the group ownership of the folder to www-data, and allow www-data to read/write/execute the PHP scripts.
@@ -44,7 +44,7 @@ to add yourself to the www-data group.
 
 Then enter:
 ```
-sudo setfacl -R -d -m group:www-data:rwx /var/www
+sudo setfacl -d -m group:www-data:rwx /var/www
 
 ```
 to ensure new files and folders inherit the permissions.
