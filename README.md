@@ -182,9 +182,10 @@ In the terminal, enter:
 ```
 sudo systemctl start autofs
 sudo systemctl enable autofs
+sudo systemctl restart autofs
 
 ```
-to run AutoFS, and set it to automatically run on startup.
+to run AutoFS, and set it to automatically run on startup. The restart was needed on my Pi due to the error *PIDFile= references path below legacy directory /var/run/, updating /var/run/autofs.pid → /run/autofs.pid; please update the unit file accordingly.* A restart seems to clear it.
 
 Note: if you look inside the */var/www/nfs* directory, you won't see the network share until it's loaded on demand (when you try to access it directly). For example, running *dir* or *ls* will return nothing. However, if you then run *cd \<folder name\>*, after a couple of seconds you will be able to browse your network share at */var/www/nfs/\<folder name\>*.
 
